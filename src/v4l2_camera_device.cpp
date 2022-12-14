@@ -281,6 +281,8 @@ bool V4l2CameraDevice<Topic>::capture_shm(Topic& img)
   img.step = cur_data_format_.bytesPerLine;
   if (cur_data_format_.pixelFormat == V4L2_PIX_FMT_YUYV) {
     shm_msgs::set_str(img.encoding, shm_msgs::image_encodings::YUV422_YUY2);
+  } else if (cur_data_format_.pixelFormat == V4L2_PIX_FMT_UYVY){
+    shm_msgs::set_str(img.encoding, shm_msgs::image_encodings::YUV422);
   } else if (cur_data_format_.pixelFormat == V4L2_PIX_FMT_GREY) {
     shm_msgs::set_str(img.encoding, shm_msgs::image_encodings::MONO8);
   } else {
@@ -292,6 +294,9 @@ bool V4l2CameraDevice<Topic>::capture_shm(Topic& img)
   }
 
   // check size
+  RCLCPP_DEBUG(rclcpp::get_logger("v4l2_camera"), "Image byte size: %d", cur_data_format_.imageByteSize);
+  RCLCPP_DEBUG(rclcpp::get_logger("v4l2_camera"), "Bytes per line: %d", cur_data_format_.bytesPerLine);
+
   if(cur_data_format_.imageByteSize > Topic::DATA_MAX_SIZE) {
     throw std::runtime_error("imageByteSize > Topic::DATA_MAX_SIZE, please check!");
   }

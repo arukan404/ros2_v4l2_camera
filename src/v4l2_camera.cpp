@@ -124,7 +124,7 @@ V4L2Camera<Topic>::V4L2Camera(rclcpp::NodeOptions const & options, bool const & 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             continue;
           }
-
+        
           auto stamp = now();
           if ((shm_msgs::get_str(img.encoding)) != output_encoding_) {
             RCLCPP_WARN_ONCE(
@@ -217,7 +217,7 @@ void V4L2Camera<Topic>::createParameters()
   output_encoding_description.description = "ROS image encoding to use for the output image."
     "Can be any supported by cv_bridge given the input pixel format";
   output_encoding_ = declare_parameter(
-    "output_encoding", std::string{"rgb8"},
+    "output_encoding", std::string{"bgr8"},
     output_encoding_description);
 
   // Camera info parameters
@@ -306,7 +306,7 @@ void V4L2Camera<Topic>::createParameters()
   }
 
   image_size_descriptor.additional_constraints = image_sizes_constraints.str();
-  image_size = declare_parameter<ImageSize>("image_size", {640, 480}, image_size_descriptor);
+  image_size = declare_parameter<ImageSize>("image_size", {1920, 1080}, image_size_descriptor);
   requestImageSize(image_size);
 
   // Control parameters
@@ -479,7 +479,9 @@ void V4L2Camera<Topic>::convert_shm(Topic & img) const
 {
   auto tracked_object = std::shared_ptr<const void>{};
   auto cvImg = shm_msgs::toCvShare(img, tracked_object);
+  RCLCPP_DEBUG(get_logger(), "Encoding from cvShare: %s", cvImg->encoding.c_str());
   auto cvConvertedImg = shm_msgs::cvtColor(cvImg, output_encoding_);
+  RCLCPP_DEBUG(get_logger(), "Channels from cvtColor: %d", cvConvertedImg.get()->image.channels());
   cvConvertedImg->toImageMsg(img);
 }
 

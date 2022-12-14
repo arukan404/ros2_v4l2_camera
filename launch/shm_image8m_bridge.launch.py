@@ -9,10 +9,10 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
        launch_ros.actions.Node(
-            package='shm_msgs', executable='shm_image1m_bridge', output='screen',
+            package='shm_msgs', executable='shm_image8m_bridge', output='screen',
             remappings=[
-                ('shm_image_input', 'shm_image_1m'),
-                ('sensor_image_output', 'sensor_image_1m')
+                ('shm_image_input', 'shm_image_8m'),
+                ('sensor_image_output', 'sensor_image_8m')
             ],
             parameters=[
             ]

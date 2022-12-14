@@ -25,7 +25,9 @@ find_package(rclcpp_components REQUIRED)
 find_package(camera_info_manager REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
+# set(CMAKE_FIND_DEBUG_MODE TRUE)
 find_package(shm_msgs REQUIRED)
+# set(CMAKE_FIND_DEBUG_MODE FALSE)
 find_package(Boost REQUIRED system filesystem date_time iostreams serialization)
 find_package(VTK REQUIRED)
 find_package(libusb REQUIRED)
@@ -37,6 +39,7 @@ add_library(v4l2_camera
 rclcpp_components_register_nodes(v4l2_camera "v4l2_camera::V4L2Camera")
 target_link_libraries(v4l2_camera
   opencv_highgui
+  # shm_msgs
 )
 target_include_directories(v4l2_camera PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
